@@ -50,6 +50,7 @@ export class ParameterUpdater {
   }
 
   async commitObjects() {
+    debugger;
     // add each object to a speckle object and push that up
     const formData = new FormData();
     const tojson = this.objects.map((o) => ({
@@ -77,7 +78,7 @@ export class ParameterUpdater {
       },
     }));
     formData.append("batch1", new Blob([JSON.stringify(tojson)]));
-    await fetch(`https://v2.speckle.arup.com/objects/${this.streamid}`, {
+    await fetch(`https://speckle.xyz/objects/${this.streamid}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${store.state.token.token}`,
@@ -115,7 +116,7 @@ export class ParameterUpdater {
     };
     parentObjform.append("batch1", new Blob([JSON.stringify([parentObjData])]));
 
-    await fetch(`https://v2.speckle.arup.com/objects/${this.streamid}`, {
+    await fetch(`https://speckle.xyz/objects/${this.streamid}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${store.state.token.token}`,
@@ -142,8 +143,9 @@ export class ParameterUpdater {
 }
 
 export async function speckleFetch(query) {
+  debugger;
   try {
-    const res = await fetch(`https://v2.speckle.arup.com/graphql`, {
+    const res = await fetch(`https://speckle.xyz/graphql`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
