@@ -239,6 +239,7 @@ import flat from "flat";
 import { objectQuery } from "@/queries";
 
 import { ParameterUpdater } from "@/utils/ParameterUpdater";
+import store from "@/store";
 
 export default {
   name: "DataTable",
@@ -455,16 +456,24 @@ export default {
       this.successSnackbar = true;
     },
     async fetchFromApi(query, variables, server) {
-      return await fetch(new URL("/graphql", server), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: query,
-          variables: variables,
-        }),
-      });
+      debugger;
+      const token = store.state.token.token;
+      if (token) {
+        return await fetch(new URL("/graphql", server), {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: query,
+            variables: variables,
+          }),
+        });
+
+      } else {
+        console.error("Not authenticated");
+      }
     },
     async fetchCategories() {
       this.$emit("setRenderer", this.url);
@@ -474,7 +483,7 @@ export default {
       const server = url.origin;
       const streamId = url.pathname.split("/")[2];
       const objectId = url.pathname.split("/")[4];
-
+      debugger;
       // Get the gql query string.
       const query = objectQuery(streamId, objectId);
 
@@ -734,6 +743,7 @@ export default {
 
       Object.entries(paramIdValArr).forEach(([key, val]) => {
         key;
+        debugger;
         this.parameterUpdater.updateParam(this.editedItem.id, val[0], val[1]);
       });
       console.log("parameterUpdater:", this.parameterUpdater);
